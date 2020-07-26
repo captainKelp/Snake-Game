@@ -119,11 +119,7 @@ def gameLoop():
         # 6. Create an empty list for the current position of the snake
         snakePosHist_List = []
         # 7. Append the current position of the snake to the list
-<<<<<<< HEAD
         if (x1_change >= 0) & (y1_change >= 0):
-=======
-        for (x1_change >= 0) & (y1_change >= 0):
->>>>>>> 891d243888ade9f319fc9827ddfefc902c635ff2
             snakePosHist_List.append(x1_change)
             snakePosHist_List.append(y1_change)
 
@@ -157,7 +153,15 @@ def gameLoop():
         # 11. Check if the position of the snake's head matches the position of the food
         #   If so, randomly generate a new food item
         #   And increase the length of the snake by 1
-        if currentSnakePos == currentFoodPos:
+        if (x1_change<=(foodx+snake_block) and x1_change>=foodx) or
+        (foodx<=(x1_change+snake_block)and foodx>=x1_change):
+            foodx.random()
+            foody.random()
+            snake_length += 1
+        if (y1_change<=(foody+snake_block) and y1_change>=foody) or
+        (foody<=(y1_change+snake_block)and foody>=y1_change):
+            foodx.random()
+            foody.random()
             snake_length += 1
 
         pygame.display.update()
