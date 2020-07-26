@@ -58,8 +58,8 @@ def gameLoop():
     x1 = 300
     y1 = 200
     # 2. Set x1_change and y1_change to 0 since the snake isn't moving yet
-    x1_change = 0
-    y1_change = 0
+    x1_change = 300
+    y1_change = 200
     # A list that will change as the snake gets bigger
     snake_List = []
     # Sets the initial length of the snake to 1
@@ -96,9 +96,8 @@ def gameLoop():
                 #   changes depending on which arrow key is pressed
                 #   Hint: Change the variables x1_change and y1_change
             if event.type == pygame.KEYDOWN:
-
                 if (event.key == pygame.K_UP):
-                    y1_change = y1_change - snake_block
+                    y1_change= y1_change - snake_block
                 if (event.key == pygame.K_DOWN):
                     y1_change = y1_change + snake_block
                 if (event.key == pygame.K_RIGHT):
@@ -120,14 +119,16 @@ def gameLoop():
         # 6. Create an empty list for the current position of the snake
         snakePosHist_List = []
         # 7. Append the current position of the snake to the list
-        snakePosHist_List.append(x1_change)
-        snakePosHist_List.append(y1_change)
+        if (x1_change >= 0) & (y1_change >= 0):
+            snakePosHist_List.append(x1_change)
+            snakePosHist_List.append(y1_change)
 
         #    Hint: You're creating a list with the length of two where
         #          [0] is x and [1] is y
 
         # 8. Add the new list you just created to snake_List
-        snake_List.append(snakePosHist_List)
+        for coordinates in snakePosHist_List:
+            snake_List.append(snakePosHist_List[coordinates])
 
         # 9. If the length of snake_List is bigger than the snake_length,
         #   delete the first index of snake_List
@@ -138,27 +139,24 @@ def gameLoop():
 
         if len(snake_List) > snake_length:
             snake_List.remove(snake_List[0])
-        #    snake_List.remove(snake_List[1])
 
         # 10. Check if any part of your snake is touching any other part of your snake
         #   If so, end the game
-
-
         currentSnakePos = x1_change, y1_change
         currentFoodPos = foodx, foody
 
         our_snake(snake_block, snake_List)
         Your_score(snake_length - 1)
 
-        pygame.display.update()
+
 
         # 11. Check if the position of the snake's head matches the position of the food
         #   If so, randomly generate a new food item
         #   And increase the length of the snake by 1
         if currentSnakePos == currentFoodPos:
             snake_length += 1
-            print(snake_length)
 
+        pygame.display.update()
         clock.tick(snake_speed)
 
     pygame.quit()
