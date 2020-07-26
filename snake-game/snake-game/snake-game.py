@@ -119,7 +119,11 @@ def gameLoop():
         # 6. Create an empty list for the current position of the snake
         snakePosHist_List = []
         # 7. Append the current position of the snake to the list
+<<<<<<< HEAD
         if (x1_change >= 0) & (y1_change >= 0):
+=======
+        for (x1_change >= 0) & (y1_change >= 0):
+>>>>>>> 891d243888ade9f319fc9827ddfefc902c635ff2
             snakePosHist_List.append(x1_change)
             snakePosHist_List.append(y1_change)
 
