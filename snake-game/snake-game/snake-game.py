@@ -25,7 +25,7 @@ pygame.display.set_caption('Snake Game')
 clock = pygame.time.Clock()
 
 snake_block = 10
-snake_speed = 15
+snake_speed = 20
 
 # Sets fonts
 font_style = pygame.font.SysFont("bahnschrift", 25)
@@ -38,8 +38,8 @@ def Your_score(score):
 
 # A function to draw the snake on the screen
 # Draws a rectangle at every position in snake_list of size snake_block
-def our_snake(snake_block, snake_list):
-    for x in snake_list:
+def our_snake(snake_block, snake_List):
+    for x in snake_List:
         pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
 
 # A function to display messages
@@ -66,8 +66,10 @@ def gameLoop():
     snake_length = 1
 
     #Position the food (foodx, foody) to a random location using random module
-    foodx = random.randrange(1, 601)
-    foody = random.randrange(1, 401)
+    #foodx = random.randrange(1, dis_width - snake_block)
+    #foody = random.randrange(1, dis_width - snake_block)
+    foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
+    foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
     #While the game is not over
     while not game_over:
 
@@ -104,14 +106,17 @@ def gameLoop():
                     x1_change = x1_change + snake_block
                 if (event.key == pygame.K_LEFT):
                     x1_change = x1_change - snake_block
-
-
         # 4. Check if the position of x1 or y1 is outside of the display
         # 5. Add the change of the position to the position
-        if x1_change > dis_width:
+        if (x1_change >= dis_width) or (x1_change < 0):
             x1_change = dis_width
-        if y1_change > dis_height:
+            game_close = True
+        if (y1_change >= dis_height) or (y1_change < 0):
             y1_change = dis_height
+            game_close = True
+
+        x1 += x1_change
+        y1 += y1_change
 
         dis.fill(blue)
         pygame.draw.rect(dis, green, [foodx, foody, snake_block, snake_block])
@@ -119,51 +124,36 @@ def gameLoop():
         # 6. Create an empty list for the current position of the snake
         snakePosHist_List = []
         # 7. Append the current position of the snake to the list
-        if (x1_change >= 0) & (y1_change >= 0):
-            snakePosHist_List.append(x1_change)
-            snakePosHist_List.append(y1_change)
-
+        snakePosHist_List.append(x1_change)
+        snakePosHist_List.append(y1_change)
         #    Hint: You're creating a list with the length of two where
         #          [0] is x and [1] is y
-
         # 8. Add the new list you just created to snake_List
-        for coordinates in snakePosHist_List:
-            snake_List.append(snakePosHist_List[coordinates])
-
+        snake_List.append(snakePosHist_List)
         # 9. If the length of snake_List is bigger than the snake_length,
         #   delete the first index of snake_List
         #   NOTE: You want to do this because you want snake_List to only contain
         #       lists of positions on the display that your snake is occupying.
         #       So you're deleting positions your snake has moved off of
         #       (which would be the oldest entry)
-
         if len(snake_List) > snake_length:
             snake_List.remove(snake_List[0])
-
         # 10. Check if any part of your snake is touching any other part of your snake
         #   If so, end the game
-        currentSnakePos = x1_change, y1_change
-        currentFoodPos = foodx, foody
-
         our_snake(snake_block, snake_List)
         Your_score(snake_length - 1)
 
-
+        for x in snake_List[:-1]:
+            if (x == x1_change) and (x == y1_change):
+                game_over = True
 
         # 11. Check if the position of the snake's head matches the position of the food
         #   If so, randomly generate a new food item
         #   And increase the length of the snake by 1
-        if (x1_change<=(foodx+snake_block) and x1_change>=foodx) or
-        (foodx<=(x1_change+snake_block)and foodx>=x1_change):
-            foodx.random()
-            foody.random()
+        if x1_change == foodx and y1_change == foody:
+            foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
+            foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
             snake_length += 1
-        if (y1_change<=(foody+snake_block) and y1_change>=foody) or
-        (foody<=(y1_change+snake_block)and foody>=y1_change):
-            foodx.random()
-            foody.random()
-            snake_length += 1
-
         pygame.display.update()
         clock.tick(snake_speed)
 
